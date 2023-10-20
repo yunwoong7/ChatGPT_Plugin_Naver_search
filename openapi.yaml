@@ -1,0 +1,551 @@
+openapi: 3.0.1
+info:
+  title: Naver Search ChatGPT Plugin
+  description: A plugin that enhances ChatGPT with the capability to perform searches on Naver for various content types including news and blogs.
+  version: v1
+servers:
+  - url: 'http://localhost:5002'
+paths:
+  /news:
+    get:
+      summary: "Search for news articles based on the query."
+      operationId: "searchNews"
+      parameters:
+        - name: "query"
+          in: "query"
+          description: "Search keywords."
+          required: true
+          schema:
+            type: "string"
+        - name: "display"
+          in: "query"
+          description: "Number of results to display."
+          required: false
+          schema:
+            type: "integer"
+            default: 10
+            maximum: 100
+        - name: "start"
+          in: "query"
+          description: "Index of the first result to return."
+          required: false
+          schema:
+            type: "integer"
+            default: 1
+            maximum: 1000
+        - name: "sort"
+          in: "query"
+          description: "Sort order of results."
+          required: false
+          schema:
+            type: "string"
+            enum: [ "sim", "date" ]
+            default: "sim"
+      responses:
+        '200':
+          description: Successful response with news articles.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommonResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /blog:
+    get:
+      summary: "Search for blog posts based on the query."
+      operationId: "searchBlog"
+      parameters:
+        - name: "query"
+          in: "query"
+          description: "Search keywords."
+          required: true
+          schema:
+            type: "string"
+        - name: "display"
+          in: "query"
+          description: "Number of results to display."
+          required: false
+          schema:
+            type: "integer"
+            default: 10
+            maximum: 100
+        - name: "start"
+          in: "query"
+          description: "Index of the first result to return."
+          required: false
+          schema:
+            type: "integer"
+            default: 1
+            maximum: 1000
+        - name: "sort"
+          in: "query"
+          description: "Sort order of results."
+          required: false
+          schema:
+            type: "string"
+            enum: [ "sim", "date" ]
+            default: "sim"
+      responses:
+        '200':
+          description: Successful response with blog posts.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommonResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /image:
+    get:
+      summary: "Search for images based on the query."
+      operationId: "searchImage"
+      parameters:
+        - name: "query"
+          in: "query"
+          description: "Search keywords."
+          required: true
+          schema:
+            type: "string"
+        - name: "display"
+          in: "query"
+          description: "Number of results to display."
+          required: false
+          schema:
+            type: "integer"
+            default: 10
+            maximum: 100
+        - name: "start"
+          in: "query"
+          description: "Index of the first result to return."
+          required: false
+          schema:
+            type: "integer"
+            default: 1
+            maximum: 1000
+        - name: "sort"
+          in: "query"
+          description: "Sort order of results."
+          required: false
+          schema:
+            type: "string"
+            enum: [ "sim", "date" ]
+            default: "sim"
+        - name: "filter"
+          in: "query"
+          description: "Filter by size."
+          required: false
+          schema:
+            type: "string"
+            enum: [ "all", "large", "medium", "small" ]
+            default: "all"
+      responses:
+        '200':
+          description: Successful response with images.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lastBuildDate:
+                    type: string
+                    format: date-time
+                    description: The date and time when the response was last updated.
+                  total:
+                    type: integer
+                    description: The total number of search results.
+                  start:
+                    type: integer
+                    description: The starting index of the current page of results.
+                  display:
+                    type: integer
+                    description: The number of results displayed on the current page.
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                          description: The title of the image.
+                        link:
+                          type: string
+                          description: Direct link to the image.
+                        thumbnail:
+                          type: string
+                          description: Link to the thumbnail of the image.
+                        sizeheight:
+                          type: string
+                          description: The height of the image.
+                        sizewidth:
+                          type: string
+                          description: The width of the image.
+                required:
+                  - lastBuildDate
+                  - total
+                  - start
+                  - display
+                  - items
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /shop:
+    get:
+      summary: "Search for products based on the query."
+      operationId: "searchShop"
+      parameters:
+        - name: "query"
+          in: "query"
+          description: "Search keywords."
+          required: true
+          schema:
+            type: "string"
+        - name: "display"
+          in: "query"
+          description: "Number of results to display."
+          required: false
+          schema:
+            type: "integer"
+            default: 10
+            maximum: 100
+        - name: "start"
+          in: "query"
+          description: "Index of the first result to return."
+          required: false
+          schema:
+            type: "integer"
+            default: 1
+            maximum: 1000
+        - name: "sort"
+          in: "query"
+          description: "Sort order of results."
+          required: false
+          schema:
+            type: "string"
+            enum: [ "sim", "date", "asc", "dsc" ]
+            default: "sim"
+        - name: "filter"
+          in: "query"
+          description: "Type of products to include."
+          required: false
+          schema:
+            type: "string"
+        - name: "exclude"
+          in: "query"
+          description: "Type of products to exclude."
+          required: false
+          schema:
+            type: "string"
+      responses:
+        '200':
+          description: Successful response with products.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lastBuildDate:
+                    type: string
+                    format: date-time
+                    description: The date and time when the response was last updated.
+                  total:
+                    type: integer
+                    description: The total number of search results.
+                  start:
+                    type: integer
+                    description: The starting index of the current page of results.
+                  display:
+                    type: integer
+                    description: The number of results displayed on the current page.
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                          description: The title of the product.
+                        link:
+                          type: string
+                          description: Direct link to the product.
+                        image:
+                          type: string
+                          description: URL of the product image.
+                        lprice:
+                          type: string
+                          description: The lowest price of the product.
+                        hprice:
+                          type: string
+                          description: The highest price of the product.
+                        mallName:
+                          type: string
+                          description: The name of the online mall where the product is sold.
+                        productId:
+                          type: string
+                          description: The ID of the product.
+                        productType:
+                          type: string
+                          description: The type of the product.
+                        brand:
+                          type: string
+                          description: The brand of the product.
+                        maker:
+                          type: string
+                          description: The maker of the product.
+                        category1:
+                          type: string
+                          description: The primary category of the product.
+                        category2:
+                          type: string
+                          description: The secondary category of the product.
+                        category3:
+                          type: string
+                          description: The tertiary category of the product.
+                        category4:
+                          type: string
+                          description: The quaternary category of the product.
+                required:
+                  - lastBuildDate
+                  - total
+                  - start
+                  - display
+                  - items
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /kin:
+    get:
+      summary: "Search for knowledge content based on the query."
+      operationId: "searchKin"
+      parameters:
+        - name: "query"
+          in: "query"
+          description: "Search keywords."
+          required: true
+          schema:
+            type: "string"
+        - name: "display"
+          in: "query"
+          description: "Number of results to display."
+          required: false
+          schema:
+            type: "integer"
+            default: 10
+            maximum: 100
+        - name: "start"
+          in: "query"
+          description: "Index of the first result to return."
+          required: false
+          schema:
+            type: "integer"
+            default: 1
+            maximum: 1000
+        - name: "sort"
+          in: "query"
+          description: "Sort order of results."
+          required: false
+          schema:
+            type: "string"
+            enum: [ "sim", "date", "point" ]
+            default: "sim"
+      responses:
+        '200':
+          description: Successful response with knowledge content.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lastBuildDate:
+                    type: string
+                    format: date-time
+                    description: The date and time when the response was last updated.
+                  total:
+                    type: integer
+                    description: The total number of search results.
+                  start:
+                    type: integer
+                    description: The starting index of the current page of results.
+                  display:
+                    type: integer
+                    description: The number of results displayed on the current page.
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                          description: The title of the knowledge content.
+                        link:
+                          type: string
+                          description: Direct link to the knowledge content.
+                        description:
+                          type: string
+                          description: A brief description of the knowledge content.
+                required:
+                  - lastBuildDate
+                  - total
+                  - start
+                  - display
+                  - items
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /local:
+    get:
+      summary: "Search for local business information based on the query."
+      operationId: "searchLocal"
+      parameters:
+        - name: "query"
+          in: "query"
+          description: "Search keywords."
+          required: true
+          schema:
+            type: "string"
+        - name: "display"
+          in: "query"
+          description: "Number of results to display."
+          required: false
+          schema:
+            type: "integer"
+            default: 1
+            maximum: 5
+        - name: "start"
+          in: "query"
+          description: "Index of the first result to return."
+          required: false
+          schema:
+            type: "integer"
+            default: 1
+            maximum: 1
+        - name: "sort"
+          in: "query"
+          description: "Sort order of results."
+          required: false
+          schema:
+            type: "string"
+            enum: [ "random", "comment" ]
+            default: "random"
+      responses:
+        '200':
+          description: Successful response with local business information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lastBuildDate:
+                    type: string
+                    format: date-time
+                    description: The date and time when the response was last updated.
+                  total:
+                    type: integer
+                    description: The total number of search results.
+                  start:
+                    type: integer
+                    description: The starting index of the current page of results.
+                  display:
+                    type: integer
+                    description: The number of results displayed on the current page.
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                          description: The name of the local business.
+                        link:
+                          type: string
+                          description: Direct link to the local business's website or social media.
+                        category:
+                          type: string
+                          description: The category of the local business.
+                        description:
+                          type: string
+                          description: A brief description of the local business, if available.
+                        telephone:
+                          type: string
+                          description: The telephone number of the local business, if available.
+                        address:
+                          type: string
+                          description: The standard address of the local business.
+                        roadAddress:
+                          type: string
+                          description: The road name address of the local business.
+                        mapx:
+                          type: string
+                          description: The x coordinate on the map for the local business.
+                        mapy:
+                          type: string
+                          description: The y coordinate on the map for the local business.
+                required:
+                  - lastBuildDate
+                  - total
+                  - start
+                  - display
+                  - items
+        '400':
+          $ref: '#/components/responses/BadRequest' # Reference to a shared response for bad request
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    CommonResponse:
+      type: object
+      properties:
+        lastBuildDate:
+          type: string
+          format: date-time
+          description: The date and time when the response was last updated.
+        total:
+          type: integer
+          description: The total number of search results.
+        start:
+          type: integer
+          description: The starting index of the current page of results.
+        display:
+          type: integer
+          description: The number of results displayed on the current page.
+        items:
+          type: array
+          items:
+            type: object
+            additionalProperties: true  # Since fields can vary, we accept additional properties.
+      required:
+        - lastBuildDate
+        - total
+        - start
+        - display
+        - items
+  responses:
+    BadRequest:
+      description: Bad request. The request parameters are incorrect.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message describing what went wrong.
+            required:
+              - error
+    InternalServerError:
+      description: Internal server error.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message describing what went wrong.
+            required:
+              - error

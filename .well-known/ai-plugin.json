@@ -1,0 +1,17 @@
+{
+    "schema_version": "v1",
+    "name_for_human": "Naver Search Integration",
+    "name_for_model": "naver",
+    "description_for_human": "Perform searches on Naver for various content types including news and blogs.",
+    "description_for_model": "Plugin for searching content on Naver, including news articles and blog posts.",
+    "auth": {
+      "type": "none"
+    },
+    "api": {
+      "type": "openapi",
+      "url": "http://localhost:5002/openapi.yaml"
+    },
+    "logo_url": "http://localhost:5002/logo.png",
+    "contact_email": "legal@example.com",
+    "legal_info_url": "http://example.com/legal"
+}
